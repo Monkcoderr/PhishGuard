@@ -36,7 +36,7 @@ const Footer = () => {
                             <li><Link to="/" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">Analyzer</Link></li>
                             <li><Link to="/history" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">History</Link></li>
                             <li><Link to="/community" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">Community</Link></li>
-                            <li><Link to="/stats" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">Global Stats</Link></li>
+                            <li><Link to="/community" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">Global Stats</Link></li>
                         </ul>
                     </div>
 
@@ -44,7 +44,7 @@ const Footer = () => {
                         <h4 className="font-bold text-sm mb-6 uppercase tracking-wider text-gray-900">Resources</h4>
                         <ul className="space-y-4">
                             <li><Link to="/learn" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">Security Guide</Link></li>
-                            <li><Link to="/faq" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">FAQ</Link></li>
+                            <li><Link to="/learn" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">FAQ</Link></li>
                             <li><a href="#" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">API Docs</a></li>
                         </ul>
                     </div>

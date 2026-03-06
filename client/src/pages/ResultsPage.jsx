@@ -13,6 +13,7 @@ import {
     AlertOctagon
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import Button from '../components/ui/Button';
 import GlassCard from '../components/ui/GlassCard';
 import Badge from '../components/ui/Badge';

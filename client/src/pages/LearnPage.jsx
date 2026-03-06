@@ -11,6 +11,7 @@ import {
     Globe
 } from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
+import Badge from '../components/ui/Badge';
 import useScrollReveal from '../hooks/useScrollReveal';
 
 const LearnPage = () => {
