@@ -24,11 +24,7 @@ const getWeekId = (date = new Date()) => {
   return `${d.getFullYear()}-W${String(weekNum).padStart(2, '0')}`;
 };
 
-/**
- * Async handler to wrap express controllers
- * @param {Function} fn 
- * @returns {Function}
- */
+
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
