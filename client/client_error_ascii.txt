@@ -1,0 +1,11 @@
+node.exe : npm error Missing script: "dev"
+At line:1 char:1
++ & "C:\coding/node.exe" "C:\coding/node_modules/npm/bin/npm-cli.js" ru ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo              : NotSpecifi    ed: (npm error Mis    sing script: "dev"    :String) [], Remot    eException
+    + FullyQualifiedEr    rorId : NativeComm    andError
+ 
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: C:\Users\dell\AppData\Local\npm-cache\_logs\2026-03-06T14_16_09_838Z-debug-0.log
