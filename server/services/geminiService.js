@@ -29,10 +29,27 @@ RULES:
 - If the email is safe, say so confidently
 - Consider context: a real bank email CAN mention your account but won't ask for your password`;
 
-const model = genAI.getGenerativeModel({
-  model: 'gemini-1.5-flash',
-  systemInstruction
-});
+const DEFAULT_MODEL_CANDIDATES = [
+  process.env.GEMINI_MODEL,
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-lite',
+  'gemini-1.5-flash-latest',
+  'gemini-1.5-flash'
+].filter(Boolean);
+
+const isModelNotFoundError = (error) => {
+  const message = String(error?.message || '').toLowerCase();
+  return message.includes('404') && message.includes('not found');
+};
+
+const getModelCandidates = () => {
+  const extra = (process.env.GEMINI_MODEL_FALLBACKS || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return Array.from(new Set([...DEFAULT_MODEL_CANDIDATES, ...extra]));
+};
 
 /**
  * Analyze email content using Gemini AI
@@ -41,6 +58,10 @@ const model = genAI.getGenerativeModel({
  */
 const analyzeEmail = async (emailContent) => {
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY is missing.');
+    }
+
     const prompt = `Analyze the following email for phishing indicators. Return your analysis as a valid JSON object with EXACTLY this structure. Return ONLY the JSON, no markdown, no code blocks, no extra text:
 
   {
@@ -76,15 +97,42 @@ const analyzeEmail = async (emailContent) => {
   ${emailContent}
   ---`;
 
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.3,
-        topP: 0.8,
-        topK: 40,
-        maxOutputTokens: 4096,
+    const modelCandidates = getModelCandidates();
+    let result = null;
+    let lastError = null;
+
+    for (const modelName of modelCandidates) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          systemInstruction
+        });
+
+        result = await model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.3,
+            topP: 0.8,
+            topK: 40,
+            maxOutputTokens: 4096
+          }
+        });
+
+        break;
+      } catch (error) {
+        lastError = error;
+
+        if (isModelNotFoundError(error)) {
+          continue;
+        }
+
+        throw error;
       }
-    });
+    }
+
+    if (!result) {
+      throw lastError || new Error('No supported Gemini model available.');
+    }
 
     const responseText = result.response.text();
     
@@ -115,6 +163,11 @@ const analyzeEmail = async (emailContent) => {
     if (error instanceof SyntaxError) {
       throw new Error('Failed to parse AI response.');
     }
+
+    if (isModelNotFoundError(error)) {
+      throw new Error('No supported Gemini model is configured. Set GEMINI_MODEL in server/.env.');
+    }
+
     throw new Error('AI analysis failed. Please try again.');
   }
 };
