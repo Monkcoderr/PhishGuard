@@ -26,11 +26,11 @@ const Stats = () => {
     }, []);
 
     return (
-        <section className="py-20 bg-brand-dark rounded-[40px] my-20 mx-4 md:mx-8 relative overflow-hidden">
-            <div className="container mx-auto px-8 relative z-10">
+        <section className="py-14 md:py-20 bg-brand-dark rounded-[24px] md:rounded-[40px] my-14 md:my-20 mx-3 sm:mx-4 md:mx-8 relative overflow-hidden">
+            <div className="container mx-auto px-4 sm:px-6 md:px-8 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="text-center md:text-left text-white mb-8 md:mb-0">
-                        <h2 className="text-3xl font-black mb-4">Platform Growth</h2>
+                        <h2 className="text-2xl md:text-3xl font-black mb-4">Platform Growth</h2>
                         <p className="text-gray-400 text-sm">Real-time data from the PhishGuard network.</p>
                     </div>
 

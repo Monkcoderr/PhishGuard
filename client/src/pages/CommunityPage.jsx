@@ -54,10 +54,10 @@ const CommunityPage = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto py-8">
-            <div className="mb-12">
-                <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3 italic">
-                    <Globe size={32} /> PhishGuard Global Intelligence
+        <div className="max-w-7xl mx-auto py-6 md:py-8">
+            <div className="mb-8 md:mb-12">
+                <h1 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3 italic">
+                    <Globe size={28} /> PhishGuard Global Intelligence
                 </h1>
                 <p className="text-gray-500 mt-2">Real-time threat intelligence from our worldwide community.</p>
             </div>
@@ -122,7 +122,7 @@ const CommunityPage = () => {
                                                 <p className="text-sm text-gray-500 italic mb-4">
                                                     Targeting users via {report.category} scams. Top red flag: "{report.sampleRedFlags[0]}"
                                                 </p>
-                                                <div className="flex items-center gap-6 text-xs font-bold text-gray-400">
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-xs font-bold text-gray-400">
                                                     <div className="flex items-center gap-1.5">
                                                         <Users size={14} /> {report.reportCount} Users Reported
                                                     </div>
@@ -132,7 +132,7 @@ const CommunityPage = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="md:text-right">
+                                            <div className="md:text-right self-start md:self-auto">
                                                 <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Risk Score</div>
                                                 <div className="text-2xl font-black text-gray-900 italic">
                                                     {Math.round(report.avgPhishingScore)}%

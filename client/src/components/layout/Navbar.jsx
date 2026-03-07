@@ -41,11 +41,11 @@ const Navbar = () => {
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <nav className="flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-2 group">
-                        <div className="w-10 h-10 rounded-xl bg-brand-dark flex items-center justify-center text-white group-hover:scale-105 transition-transform">
-                            <Shield size={24} />
+                    <Link to="/" className="flex items-center gap-2 group min-w-0">
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-dark flex items-center justify-center text-white group-hover:scale-105 transition-transform flex-shrink-0">
+                            <Shield size={22} />
                         </div>
-                        <span className="font-bold text-xl tracking-tight text-gray-900">PhishGuard</span>
+                        <span className="font-bold text-lg sm:text-xl tracking-tight text-gray-900 truncate">PhishGuard</span>
                     </Link>
 
                     {/* Desktop Nav */}
@@ -91,7 +91,7 @@ const Navbar = () => {
 
                     {/* Mobile Menu Toggle */}
                     <button
-                        className="lg:hidden p-2 text-gray-600"
+                        className="lg:hidden p-2 text-gray-600 -mr-2"
                         onClick={() => setIsOpen(!isOpen)}
                     >
                         {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -108,7 +108,7 @@ const Navbar = () => {
                         exit={{ opacity: 0, height: 0 }}
                         className="lg:hidden bg-white border-b border-gray-100 overflow-hidden"
                     >
-                        <div className="px-4 py-8 flex flex-col gap-6">
+                        <div className="px-4 py-6 flex flex-col gap-5 max-h-[calc(100vh-88px)] overflow-y-auto">
                             {navLinks.map((link) => (
                                 (!link.protected || isAuthenticated) && (
                                     <Link

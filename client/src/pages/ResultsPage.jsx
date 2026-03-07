@@ -59,12 +59,12 @@ const ResultsPage = () => {
     const verdictStyles = getVerdictColor(scan.verdict);
 
     return (
-        <div className="max-w-5xl mx-auto py-8">
+        <div className="max-w-5xl mx-auto py-6 md:py-8">
             <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 mb-8 transition-colors group">
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Analyzer
             </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                 {/* Left Column: Summary & Score */}
                 <div className="lg:col-span-2 space-y-8">
                     <motion.div
@@ -72,9 +72,9 @@ const ResultsPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                     >
                         <GlassCard padding="lg" variant="light" className="relative overflow-hidden">
-                            <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
+                            <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start text-center md:text-left">
                                 {/* Score Circle */}
-                                <div className="relative w-40 h-40 flex-shrink-0">
+                                <div className="relative w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0">
                                     <svg className="w-full h-full score-ring" viewBox="0 0 100 100">
                                         <circle
                                             cx="50" cy="50" r="45"
@@ -95,7 +95,7 @@ const ResultsPage = () => {
                                         />
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-4xl font-black text-gray-900">{Math.round(scan.phishingScore)}</span>
+                                        <span className="text-3xl sm:text-4xl font-black text-gray-900">{Math.round(scan.phishingScore)}</span>
                                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Risk Score</span>
                                     </div>
                                 </div>
@@ -110,10 +110,10 @@ const ResultsPage = () => {
                                         </Badge>
                                     </div>
 
-                                    <h1 className="text-2xl font-black text-gray-900 mb-3 leading-tight italic">
+                                    <h1 className="text-xl sm:text-2xl font-black text-gray-900 mb-3 leading-tight italic">
                                         {scan.verdict === 'safe' ? "This email appears safe." : "Potential phishing threat detected!"}
                                     </h1>
-                                    <p className="text-gray-500 leading-relaxed italic pr-4">
+                                    <p className="text-gray-500 leading-relaxed italic md:pr-4">
                                         {scan.summary}
                                     </p>
                                 </div>
@@ -151,7 +151,7 @@ const ResultsPage = () => {
                                                 <h4 className="font-bold text-gray-900">{flag.flag}</h4>
                                                 <Badge variant={flag.severity} size="sm">{flag.severity}</Badge>
                                             </div>
-                                            <p className="text-xs text-gray-500 italic mb-3">"{flag.evidence}"</p>
+                                            <p className="text-xs text-gray-500 italic mb-3 break-words">"{flag.evidence}"</p>
                                             <p className="text-sm text-gray-600 leading-relaxed">{flag.explanation}</p>
                                         </div>
                                     </div>
@@ -168,7 +168,7 @@ const ResultsPage = () => {
                     >
                         <GlassCard padding="lg" variant="light" className="bg-white/40">
                             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Original Email Dissection</h3>
-                            <div className="font-mono text-sm text-gray-800 leading-relaxed whitespace-pre-wrap bg-white/50 p-6 rounded-xl border border-gray-100">
+                            <div className="font-mono text-xs sm:text-sm text-gray-800 leading-relaxed whitespace-pre-wrap break-words bg-white/50 p-4 sm:p-6 rounded-xl border border-gray-100">
                                 {scan.emailContent.split('\n').map((line, i) => (
                                     <div key={i}>{line}</div>
                                 ))}

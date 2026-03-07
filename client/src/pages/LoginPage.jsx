@@ -35,7 +35,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto py-12">
+        <div className="max-w-md mx-auto py-8 md:py-12">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -44,7 +44,7 @@ const LoginPage = () => {
                     <div className="inline-flex w-16 h-16 rounded-2xl bg-brand-dark items-center justify-center text-white mb-6">
                         <Shield size={32} />
                     </div>
-                    <GradientText className="text-4xl font-black mb-2 tracking-tight">Welcome Back.</GradientText>
+                    <GradientText className="text-3xl sm:text-4xl font-black mb-2 tracking-tight">Welcome Back.</GradientText>
                     <p className="text-gray-500 font-medium italic">Secure your access to PhishGuard.</p>
                 </div>
 

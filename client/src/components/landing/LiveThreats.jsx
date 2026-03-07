@@ -27,8 +27,8 @@ const LiveThreats = () => {
 
     return (
         <section className="py-20 border-y border-gray-100 bg-gray-50/30 overflow-hidden">
-            <div className="container mx-auto px-4 mb-12">
-                <div className="flex items-center justify-between">
+            <div className="container mx-auto px-4 mb-10 md:mb-12">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3">
                             <span className="flex h-3 w-3 relative">
@@ -39,7 +39,7 @@ const LiveThreats = () => {
                         </h2>
                         <p className="text-gray-500 mt-2">Community-confirmed phishing campaigns currently active.</p>
                     </div>
-                    <button className="text-sm font-bold text-gray-900 flex items-center gap-1 hover:gap-2 transition-all">
+                    <button className="text-sm font-bold text-gray-900 flex items-center gap-1 hover:gap-2 transition-all self-start sm:self-auto">
                         See all reports <ExternalLink size={14} />
                     </button>
                 </div>
@@ -48,7 +48,7 @@ const LiveThreats = () => {
             <div className="relative">
                 <div className="marquee-track">
                     {threats.map((threat, i) => (
-                        <div key={`${threat._id}-${i}`} className="px-4 min-w-[320px] md:min-w-[400px]">
+                        <div key={`${threat._id}-${i}`} className="px-3 sm:px-4 min-w-[280px] sm:min-w-[320px] md:min-w-[400px]">
                             <GlassCard padding="md" variant="light" className="h-full border-gray-100/50" hover>
                                 <div className="flex justify-between items-start mb-4">
                                     <Badge variant={threat.status === 'confirmed_scam' ? 'critical' : 'warning'}>

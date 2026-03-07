@@ -30,7 +30,7 @@ const Hero = () => {
     return (
         <section className="relative pt-8 pb-20 overflow-hidden">
             <div className="container mx-auto px-4 relative z-10">
-                <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-16">
+                <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-12 md:mb-16">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -41,11 +41,11 @@ const Hero = () => {
                         AI-Powered Precision Detection
                     </motion.div>
 
-                    <GradientText className="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tighter">
+                    <GradientText className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tighter">
                         Read between the lies.
                     </GradientText>
 
-                    <p className="text-xl text-gray-500 mb-10 max-w-2xl leading-relaxed">
+                    <p className="text-base sm:text-lg md:text-xl text-gray-500 mb-8 md:mb-10 max-w-2xl leading-relaxed">
                         Stop being the target of sophisticated phishing attacks. PhishGuard uses Gemini AI to dissect suspicious emails with forensic precision.
                     </p>
 
@@ -58,7 +58,7 @@ const Hero = () => {
                         >
                             <Textarea
                                 placeholder="Paste the suspicious email content here..."
-                                className="border-none focus:ring-0 text-base md:text-lg p-5 min-h-[250px] bg-transparent"
+                                className="border-none focus:ring-0 text-sm sm:text-base md:text-lg p-4 sm:p-5 min-h-[220px] sm:min-h-[250px] bg-transparent"
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                             />
@@ -76,7 +76,7 @@ const Hero = () => {
                                     disabled={!content.trim()}
                                     isLoading={isAnalyzing}
                                     onClick={handleAnalyze}
-                                    className="w-full md:w-auto min-w-[200px]"
+                                    className="w-full md:w-auto md:min-w-[200px]"
                                 >
                                     Analyze Threat <ArrowRight size={18} />
                                 </Button>

@@ -13,7 +13,10 @@ const useScan = () => {
       const res = await api.post('/scan/analyze', { emailContent });
       return res.data.scan;
     } catch (err) {
-      const message = err.response?.data?.message || 'Something went wrong during analysis';
+      const isTimeout = err.code === 'ECONNABORTED' || String(err.message || '').toLowerCase().includes('timeout');
+      const message = isTimeout
+        ? 'Analysis is taking longer than expected. Please try again in a moment.'
+        : err.response?.data?.message || 'Something went wrong during analysis';
       setError(message);
       toast.error(message);
       throw err;

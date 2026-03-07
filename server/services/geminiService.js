@@ -31,7 +31,7 @@ RULES:
 
 const DEFAULT_MODEL_CANDIDATES = [
   process.env.GEMINI_MODEL,
-  'gemini-2.0-flash',
+  'gemini-2.5-flash',
   'gemini-2.0-flash-lite',
   'gemini-1.5-flash-latest',
   'gemini-1.5-flash'
@@ -42,6 +42,15 @@ const isModelNotFoundError = (error) => {
   return message.includes('404') && message.includes('not found');
 };
 
+const isForbiddenKeyError = (error) => {
+  const message = String(error?.message || '').toLowerCase();
+  return message.includes('403') && (
+    message.includes('api key') ||
+    message.includes('forbidden') ||
+    message.includes('leaked')
+  );
+};
+
 const getModelCandidates = () => {
   const extra = (process.env.GEMINI_MODEL_FALLBACKS || '')
     .split(',')
@@ -49,6 +58,63 @@ const getModelCandidates = () => {
     .filter(Boolean);
 
   return Array.from(new Set([...DEFAULT_MODEL_CANDIDATES, ...extra]));
+};
+
+const extractJsonText = (rawText) => {
+  let cleaned = String(rawText || '').replace(/```json/gi, '').replace(/```/g, '').trim();
+
+  if (!cleaned.startsWith('{')) {
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (match) {
+      cleaned = match[0];
+    }
+  }
+
+  return cleaned;
+};
+
+const validateAnalysis = (analysis) => {
+  if (analysis.phishingScore === undefined || !analysis.verdict || !analysis.redFlags) {
+    throw new Error('AI analysis failed to provide required fields.');
+  }
+
+  analysis.phishingScore = Math.max(0, Math.min(100, Number(analysis.phishingScore) || 0));
+  return analysis;
+};
+
+const generateWithFallback = async (prompt, generationConfig = {}) => {
+  const modelCandidates = getModelCandidates();
+  let lastError = null;
+
+  for (const modelName of modelCandidates) {
+    try {
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        systemInstruction
+      });
+
+      return await model.generateContent({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.3,
+          topP: 0.8,
+          topK: 40,
+          maxOutputTokens: 4096,
+          ...generationConfig
+        }
+      });
+    } catch (error) {
+      lastError = error;
+
+      if (isModelNotFoundError(error)) {
+        continue;
+      }
+
+      throw error;
+    }
+  }
+
+  throw lastError || new Error('No supported Gemini model available.');
 };
 
 /**
@@ -62,7 +128,7 @@ const analyzeEmail = async (emailContent) => {
       throw new Error('GEMINI_API_KEY is missing.');
     }
 
-    const prompt = `Analyze the following email for phishing indicators. Return your analysis as a valid JSON object with EXACTLY this structure. Return ONLY the JSON, no markdown, no code blocks, no extra text:
+    const basePrompt = `Analyze the following email for phishing indicators. Return your analysis as a valid JSON object with EXACTLY this structure. Return ONLY the JSON, no markdown, no code blocks, no extra text:
 
   {
     "phishingScore": <number 0-100>,
@@ -97,67 +163,30 @@ const analyzeEmail = async (emailContent) => {
   ${emailContent}
   ---`;
 
-    const modelCandidates = getModelCandidates();
-    let result = null;
-    let lastError = null;
+    const firstResult = await generateWithFallback(basePrompt);
 
-    for (const modelName of modelCandidates) {
-      try {
-        const model = genAI.getGenerativeModel({
-          model: modelName,
-          systemInstruction
-        });
-
-        result = await model.generateContent({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.3,
-            topP: 0.8,
-            topK: 40,
-            maxOutputTokens: 4096
-          }
-        });
-
-        break;
-      } catch (error) {
-        lastError = error;
-
-        if (isModelNotFoundError(error)) {
-          continue;
-        }
-
-        throw error;
+    try {
+      return validateAnalysis(JSON.parse(extractJsonText(firstResult.response.text())));
+    } catch (parseError) {
+      if (!(parseError instanceof SyntaxError)) {
+        throw parseError;
       }
+
+      const retryPrompt = `${basePrompt}
+
+IMPORTANT:
+- Output strict RFC8259 valid JSON only.
+- Escape all quotes/newlines inside string values.
+- Do not include markdown, comments, or trailing commas.`;
+
+      const retryResult = await generateWithFallback(retryPrompt, {
+        temperature: 0.1,
+        topP: 0.5,
+        topK: 20
+      });
+
+      return validateAnalysis(JSON.parse(extractJsonText(retryResult.response.text())));
     }
-
-    if (!result) {
-      throw lastError || new Error('No supported Gemini model available.');
-    }
-
-    const responseText = result.response.text();
-    
-    // Clean JSON response
-    let cleanedJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-    
-    // If it still doesn't look like JSON, try to find the JSON object with regex
-    if (!cleanedJson.startsWith('{')) {
-      const match = cleanedJson.match(/\{[\s\S]*\}/);
-      if (match) {
-        cleanedJson = match[0];
-      }
-    }
-
-    const analysis = JSON.parse(cleanedJson);
-
-    // Basic validation
-    if (analysis.phishingScore === undefined || !analysis.verdict || !analysis.redFlags) {
-      throw new Error('AI analysis failed to provide required fields.');
-    }
-
-    // Clamp score
-    analysis.phishingScore = Math.max(0, Math.min(100, analysis.phishingScore));
-
-    return analysis;
   } catch (error) {
     console.error('Gemini Service Error:', error);
     if (error instanceof SyntaxError) {
@@ -166,6 +195,10 @@ const analyzeEmail = async (emailContent) => {
 
     if (isModelNotFoundError(error)) {
       throw new Error('No supported Gemini model is configured. Set GEMINI_MODEL in server/.env.');
+    }
+
+    if (isForbiddenKeyError(error)) {
+      throw new Error('Gemini API key is invalid or blocked. Generate a new key and update GEMINI_API_KEY in server/.env.');
     }
 
     throw new Error('AI analysis failed. Please try again.');
