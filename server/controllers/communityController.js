@@ -32,7 +32,7 @@ const reportScam = asyncHandler(async (req, res) => {
     report.avgPhishingScore = newAvgScore;
     report.lastReported = Date.now();
     
-    if (!report.reporters.includes(req.user.id)) {
+    if (!report.reporters.some((reporterId) => reporterId.toString() === req.user.id.toString())) {
       report.reporters.push(req.user.id);
     }
 

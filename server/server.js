@@ -64,6 +64,16 @@ app.use((err, req, res, next) => {
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`PhishGuard server running on port ${PORT}`);
+});
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Set a different PORT in your environment.`);
+    process.exit(1);
+  }
+
+  console.error('Server startup error:', error.message);
+  process.exit(1);
 });

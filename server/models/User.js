@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
 // Pre-save hook to hash password
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
-    next();
+    return next();
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
@@ -55,14 +55,13 @@ userSchema.pre('save', async function(next) {
   if (!this.avatar) {
     this.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name)}&background=111111&color=fafafa&bold=true`;
   }
+
+  return next();
 });
 
 // Match password instance method
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
-
-// Index for email
-userSchema.index({ email: 1 }, { unique: true });
 
 module.exports = mongoose.model('User', userSchema);

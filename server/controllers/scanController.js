@@ -49,8 +49,10 @@ const analyzeEmail = asyncHandler(async (req, res) => {
  * GET /api/scan/history
  */
 const getScanHistory = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const parsedPage = parseInt(req.query.page, 10);
+  const parsedLimit = parseInt(req.query.limit, 10);
+  const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+  const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? Math.min(parsedLimit, 100) : 10;
   const skip = (page - 1) * limit;
 
   const scans = await Scan.find({ userId: req.user.id })

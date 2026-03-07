@@ -78,6 +78,5 @@ const scanSchema = new mongoose.Schema({
 
 // Indexes
 scanSchema.index({ userId: 1, createdAt: -1 });
-scanSchema.index({ emailHash: 1 });
 
 module.exports = mongoose.model('Scan', scanSchema);

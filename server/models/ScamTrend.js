@@ -41,6 +41,4 @@ const scamTrendSchema = new mongoose.Schema({
   timestamps: true
 });
 
-scamTrendSchema.index({ weekId: 1 }, { unique: true });
-
 module.exports = mongoose.model('ScamTrend', scamTrendSchema);
