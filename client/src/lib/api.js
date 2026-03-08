@@ -1,9 +1,12 @@
 import axios from 'axios';
 
 const apiTimeout = Number(import.meta.env.VITE_API_TIMEOUT_MS) || 120000;
+const defaultApiUrl = import.meta.env.PROD
+  ? 'https://phishguard-wer8.onrender.com/api'
+  : 'http://localhost:5000/api';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || defaultApiUrl,
   headers: {
     'Content-Type': 'application/json'
   },

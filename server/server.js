@@ -19,9 +19,32 @@ connectDB();
 
 // Middleware
 app.use(helmet());
-app.use(cors({ 
-  origin: process.env.CLIENT_URL || 'http://localhost:5173', 
-  credentials: true 
+const defaultAllowedOrigins = [
+  'http://localhost:5173',
+  'https://phish-guard-sand-nine.vercel.app'
+];
+
+const configuredOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = configuredOrigins.length > 0 ? configuredOrigins : defaultAllowedOrigins;
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, Postman, same-origin server calls).
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('CORS policy blocked this origin.'));
+  },
+  credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
