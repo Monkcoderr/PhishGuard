@@ -42,14 +42,7 @@ const isModelNotFoundError = (error) => {
   return message.includes('404') && message.includes('not found');
 };
 
-const isForbiddenKeyError = (error) => {
-  const message = String(error?.message || '').toLowerCase();
-  return message.includes('403') && (
-    message.includes('api key') ||
-    message.includes('forbidden') ||
-    message.includes('leaked')
-  );
-};
+
 
 const getModelCandidates = () => {
   const extra = (process.env.GEMINI_MODEL_FALLBACKS || '')
