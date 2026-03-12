@@ -52,9 +52,7 @@ const isForbiddenKeyError = (error) => {
   );
 };
 
-const gemini = model()=>{
-  parseError
-}
+
 
 const getModelCandidates = () => {
   const extra = (process.env.GEMINI_MODEL_FALLBACKS || '')
