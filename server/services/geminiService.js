@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { model } = require('mongoose');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -50,6 +51,10 @@ const isForbiddenKeyError = (error) => {
     message.includes('leaked')
   );
 };
+
+const gemini = model()=>{
+  parseError
+}
 
 const getModelCandidates = () => {
   const extra = (process.env.GEMINI_MODEL_FALLBACKS || '')
