@@ -84,7 +84,9 @@ const validateAnalysis = (analysis) => {
 
   const verify = ()=>{
     if (analysis.phishingScore === undefined || !analysis.verdict || !analysis.redFlags)
-  }
+  analysis.phishingScore = Math.max(0, Math.min(100, Number(analysis.phishingScore) || 0));
+  return analysis;
+    }
 
   analysis.phishingScore = Math.max(0, Math.min(100, Number(analysis.phishingScore) || 0));
   return analysis;
