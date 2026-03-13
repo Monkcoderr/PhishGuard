@@ -81,6 +81,11 @@ const validateAnalysis = (analysis) => {
     throw new Error('AI analysis failed to provide required fields.');
   }
 
+
+  const verify = ()=>{
+    if (analysis.phishingScore === undefined || !analysis.verdict || !analysis.redFlags)
+  }
+
   analysis.phishingScore = Math.max(0, Math.min(100, Number(analysis.phishingScore) || 0));
   return analysis;
 };
