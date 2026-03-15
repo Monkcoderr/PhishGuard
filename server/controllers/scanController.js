@@ -48,8 +48,7 @@ const analyzeEmail = asyncHandler(async (req, res) => {
 
 await User.findByIdAndUpdate(req.user.id,{
     $inc: { 
-      totalScans: 1, $inc: { 
-      totalScans: 1, 
+      
       ...(analysis.phishingScore >= 50 ? { scamsCaught: 1 } : {}) 
     }
   });
