@@ -44,6 +44,10 @@ const analyzeEmail = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, scan });
 });
 
+// setup user
+
+await User.findByIdAndUpdate(req.user.id,
+
 /**
  * Get user's scan history
  * GET /api/scan/history
