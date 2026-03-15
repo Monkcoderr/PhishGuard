@@ -46,7 +46,9 @@ const analyzeEmail = asyncHandler(async (req, res) => {
 
 // setup user
 
-await User.findByIdAndUpdate(req.user.id,
+await User.findByIdAndUpdate(req.user.id,{
+    $inc: { 
+      totalScans: 1, 
 
 /**
  * Get user's scan history
