@@ -10,3 +10,6 @@ const verification = asyncHandler(async (req, res) => {
     if (userExists) {
       return res.status(400).json({ success: false, message: 'User already exists with this email' });
     }
+
+    const loginVerification = asyncHandler(async (req, res) => {
+      const { email, password } = req.body;
